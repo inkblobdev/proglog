@@ -1,4 +1,4 @@
-package server
+package legacy_server
 
 import (
 	"errors"

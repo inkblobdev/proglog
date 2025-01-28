@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 
-	"proglog/internal/server"
+	"proglog/internal/legacy_server"
 )
 
 func main() {
-	srv := server.NewHTTPServer(":8080")
+	srv := legacy_server.NewHTTPServer(":8080")
 	log.Fatal(srv.ListenAndServe())
 }

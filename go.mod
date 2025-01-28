@@ -4,10 +4,17 @@ go 1.23.5
 
 require (
 	github.com/go-chi/chi/v5 v5.2.0
+	google.golang.org/grpc v1.70.0
 	google.golang.org/protobuf v1.36.4
 )
 
-require github.com/tysonmote/gommap v0.0.3 // indirect
+require (
+	github.com/tysonmote/gommap v0.0.3
+	golang.org/x/net v0.32.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20241202173237-19429a94021a // indirect
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

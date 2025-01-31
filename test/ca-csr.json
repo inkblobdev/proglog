@@ -1,0 +1,16 @@
+{
+  "CN": "My awesome CA",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "COL",
+      "L": "MED",
+      "ST": "Antioquia",
+      "O": "InkBlob Inc",
+      "OU": "CA Services"
+    }
+  ]
+}

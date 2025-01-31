@@ -1,0 +1,17 @@
+{
+  "CN": "client",
+  "hosts": [""],
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "COL",
+      "L": "MED",
+      "ST": "Antioquia",
+      "O": "Inkblob Inc",
+      "OU": "Distributed Services"
+    }
+  ]
+}

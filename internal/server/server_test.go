@@ -8,10 +8,11 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
 
 	api "proglog/api/v1"
+	"proglog/internal/config"
 	"proglog/internal/log"
 )
 
@@ -31,12 +32,30 @@ func TestServer(t *testing.T) {
 
 func setupTest(t *testing.T, fn func(config *Config)) (client api.LogClient, cfg *Config, teardown func()) {
 	t.Helper()
-	l, err := net.Listen("tcp", ":0")
+	l, err := net.Listen("tcp", "127.0.0.1:0")
 	require.NoError(t, err)
 
-	clientOptions := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+	clientTLSConfig, err := config.SetupTLSConfig(config.TLSConfig{
+		CAFile:   config.CAFile,
+		KeyFile:  config.ClientKeyFile,
+		CertFile: config.ClientCertFile,
+	})
+	require.NoError(t, err)
+	clientCreds := credentials.NewTLS(clientTLSConfig)
+	clientOptions := []grpc.DialOption{grpc.WithTransportCredentials(clientCreds)}
 	cc, err := grpc.NewClient(l.Addr().String(), clientOptions...)
 	require.NoError(t, err)
+
+	serverTLSConfig, err := config.SetupTLSConfig(config.TLSConfig{
+		CAFile:        config.CAFile,
+		CertFile:      config.ServerCertFile,
+		KeyFile:       config.ServerKeyFile,
+		ServerAddress: l.Addr().String(),
+		Server:        true,
+	})
+	require.NoError(t, err)
+
+	serverCreds := credentials.NewTLS(serverTLSConfig)
 
 	dir, err := os.MkdirTemp("", "server-test")
 	require.NoError(t, err)
@@ -47,10 +66,11 @@ func setupTest(t *testing.T, fn func(config *Config)) (client api.LogClient, cfg
 	cfg = &Config{
 		CommitLog: clog,
 	}
+
 	if fn != nil {
 		fn(cfg)
 	}
-	server, err := NewGRPCServer(cfg)
+	server, err := NewGRPCServer(cfg, grpc.Creds(serverCreds))
 	require.NoError(t, err)
 
 	go func() {

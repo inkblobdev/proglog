@@ -1,5 +1,10 @@
 CONFIG_PATH=${HOME}/.proglog/
 
+$(CONFIG_PATH)/model.conf:
+	cp test/model.conf $(CONFIG_PATH)/model.conf
+$(CONFIG_PATH)/policy.csv:
+	cp test/policy.csv $(CONFIG_PATH)/policy.csv
+
 
 .PHONY: init
 init:
@@ -24,5 +29,5 @@ proto-compile:
 		--proto_path=.
 
 .PHONY: go-test
-go-test:
+go-test: $(CONFIG_PATH)/policy.csv $(CONFIG_PATH)/model.conf
 	go test -race ./...
